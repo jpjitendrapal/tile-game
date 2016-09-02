@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html ng-app="App">
+<head>
+  <title>Tile Selection Game</title>
+  <!--css style files start-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="CSS/app.css">
+  <!--css style end-->
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+<body>
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+      <div ng-controller="TileGameCtrl">
+        <div class="grids-ct row">
+          <div class="tile" ng-style="tileStyle" ng-repeat="number in levelGridMap[level] track by $index">
+            <div class="tile-data">{{$index + 1}}</div>
+          </div>
+        </div>
+        <input ng-model="newlevel">
+        <button class="btn btn-default" ng-click="changeLevel(newlevel)">CLick</button>
+      </div>
+    </div>
+  </div>
+
+
+
+</div>
+
+<!--script files start-->
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"/>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.5/angular.min.js"></script>
+<script src="JS/app.js"></script>
+<script src="JS/tile/tile.js"></script>
+<!--script files end-->
+</body>
+</html>
