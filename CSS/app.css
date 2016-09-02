@@ -4,9 +4,9 @@ body{
 
 .tile-data{
   height: 100px;
-  width: 90%;
-  margin-top:10px;
-  margin-bottom: 10px;
+  width: 95%;
+  margin-top:2.5%;
+  margin-bottom: 2.5%;
   background-color: aqua;
   border-radius: 5px;
 }
