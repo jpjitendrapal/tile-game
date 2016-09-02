@@ -9,21 +9,43 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 </head>
 <body>
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-xs-"></div>
-  </div>
+<div class="container-fluid" ng-controller="TileGameCtrl">
   <div class="row">
     <div class="col-xs-12 col-sm-offset-1 col-sm-10">
-      <div ng-controller="TileGameCtrl">
-        <div class="grids-ct row">
-          <div class="tile" ng-style="tileStyle" ng-repeat="number in levelGridMap[level] track by $index">
-            <div class="tile-data">{{$index + 1}}</div>
+      <div class="row">
+        <div class="col-xs-3">
+          <button class="btn btn-success" ng-click="startGame()">START</button>
+        </div>
+        <div class="col-xs-4">
+          <div class="row">
+            <label for="changeLevel" class="col-xs-4 text-right level-lbl">Level</label>
+            <div class="col-xs-8">
+              <select class="form-control" id="changeLevel" ng-model="selectedLevel" ng-change="changeLevel(selectedLevel)">
+                <option ng-repeat="lvl in levels" ng-value="lvl.level">Level {{lvl.level + 1 + ' (' + lvl.levelDisplay + ')'}}</option>
+              </select>
+            </div>
           </div>
         </div>
-        <input ng-model="newlevel">
-        <button class="btn btn-default" ng-click="changeLevel(newlevel)">CLick</button>
+        <div class="col-xs-5">
+          <!--Timer-->
+        </div>
       </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="grids-ct row">
+            <div class="tile" ng-style="tileStyle" ng-repeat="tile in tiles">
+              <div
+                class="tile-data"
+                ng-style="{backgroundColor: tile.color}"
+                data-tile-id="{{tile.tileNumber}}"
+                ng-click="tileClick(tile.tileNumber)" >
+                <!--{{$index + 1}}-->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
