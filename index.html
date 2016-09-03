@@ -13,36 +13,42 @@
   <div class="row">
     <div class="col-xs-12 col-sm-offset-1 col-sm-10">
       <div class="row">
-        <div class="col-xs-12">
-          <h2>Select Color Tiles</h2>
+        <div class="col-xs-12 text-center">
+          <div class="game-title">Select Color Tiles</div>
         </div>
       </div>
       <div class="row">
-        <div class="col-xs-3">
-          <button ng-class="{'disabled btn-default':playing, 'btn-success':!playing}" class="btn start-game" ng-click="startGame()"> {{chances == 3 ? 'START' : 'PLAY'}}</button>
+        <div class="col-xs-12 col-sm-3 margin-bottom">
+          <button ng-class="{'disabled btn-default':playing, 'btn-success':!playing}" class="btn start-game" ng-click="startGame()"><span ng-bind="playing ? 'Playing' : (chances == TOTALCHANCES ? 'START' : 'PLAY')"></span></button>
         </div>
-        <div class="col-xs-3">
+        <div class="col-xs-12 col-sm-3 margin-bottom">
           <div class="row">
-            <label for="changeLevel" class="col-xs-4 text-right level-lbl">Level</label>
+            <label for="changeLevel" class="col-xs-4 level-lbl">Level</label>
             <div class="col-xs-8">
               <select class="form-control" ng-class="{'disabled':playing}" id="changeLevel" ng-model="selectedLevel" ng-change="changeLevel(selectedLevel)">
-                <option value="0" selected>Select</option>
+                <option value="0">Select</option>
                 <option ng-repeat="lvl in levels" data-ng-value="lvl.level">{{lvl.level + 1 + ' (' + lvl.levelDisplay + ')'}}</option>
               </select>
             </div>
           </div>
         </div>
-        <div class="col-xs-5">
+        <div class="col-xs-12 col-sm-5 margin-bottom">
           <!--Timer-->
           <div class="row">
-            <label class="col-xs-6 text-right level-lbl">Time Left:</label>
-            <label class="col-xs-6 text-left time-remaining" ng-class="{'red-color': (timeRemaining <= 3000 && playing)}">{{(timeRemaining)/1000}} <span class="second">s</span></label>
+            <label class="col-xs-6 col-sm-6 col-lg-offset-1 col-lg-4 level-lbl">Time Left:</label>
+            <label class="col-xs-6 time-remaining" ng-class="{'red-color': (timeRemaining <= 3000 && playing)}"><span ng-bind="(timeRemaining)/1000"></span> <span class="second">s</span></label>
           </div>
         </div>
       </div>
-      <div class="row" ng-hide="chances > 2 || chances == 0 || playerWin">
-        <div class="col-xs-12 text-center" ng-class="{'red-color':chances < 2}">
+      <div class="row" ng-hide="chances == TOTALCHANCES || chances == 0 || playerWin">
+        <div class="col-xs-12 text-center" ng-class="{'warn-color':chances < 2}">
           <h3>Time's UP. You have {{chances}} more Chance</h3>
+        </div>
+      </div>
+
+      <div class="row" ng-show="playAgain">
+        <div class="col-xs-12 text-center">
+          <h5>Click on Play button to start the game again</h5>
         </div>
       </div>
 
@@ -71,13 +77,11 @@
     </div>
   </div>
 </div>
-
 <!--script files start-->
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"/>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.5/angular.min.js"></script>
 <script src="JS/app.js"></script>
-<script src="JS/tile/tile.js"></script>
 <!--script files end-->
 </body>
 </html>
