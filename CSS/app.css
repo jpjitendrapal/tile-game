@@ -3,8 +3,24 @@ body{
   padding-top: 20px;
 }
 
+.disabled{
+  pointer-events: none;
+}
+.red-color{
+  color: red;
+}
+.green-color{
+  color: green;
+}
 .grids-ct{
   padding-top: 30px;
+}
+.time-remaining{
+  font-size: 32px;
+  line-height: 25px;
+}
+.second{
+  font-size: 16px;
 }
 .tile-data{
   height: 100px;
@@ -12,8 +28,10 @@ body{
   margin:2.5%;
   background-color: #A9A9A9;
   border-radius: 5px;
-  cursor: pointer;
   border: 1px solid black;
+}
+.tile-data.colored{
+  cursor: pointer;
 }
 @media screen and (min-width: 767px) {
   .tile-data{

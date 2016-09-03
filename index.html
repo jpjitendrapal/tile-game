@@ -13,14 +13,19 @@
   <div class="row">
     <div class="col-xs-12 col-sm-offset-1 col-sm-10">
       <div class="row">
+        <div class="col-xs-12">
+          <h2>Select Color Tiles</h2>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-xs-3">
-          <button class="btn btn-success" ng-click="startGame()">START</button>
+          <button ng-class="{'disabled':playing}" class="btn btn-success" ng-click="startGame()">PLAY</button>
         </div>
         <div class="col-xs-4">
           <div class="row">
             <label for="changeLevel" class="col-xs-4 text-right level-lbl">Level</label>
             <div class="col-xs-8">
-              <select class="form-control" id="changeLevel" ng-model="selectedLevel" ng-change="changeLevel(selectedLevel)">
+              <select class="form-control" ng-class="{'disabled':playing}" id="changeLevel" ng-model="selectedLevel" ng-change="changeLevel(selectedLevel)">
                 <option ng-repeat="lvl in levels" ng-value="lvl.level">Level {{lvl.level + 1 + ' (' + lvl.levelDisplay + ')'}}</option>
               </select>
             </div>
@@ -28,18 +33,35 @@
         </div>
         <div class="col-xs-5">
           <!--Timer-->
+          <div class="row">
+            <label class="col-xs-6 text-right level-lbl">Time Left:</label>
+            <label class="col-xs-6 text-left time-remaining">{{(timeRemaining)/1000}} <span class="second">s</span></label>
+          </div>
         </div>
       </div>
+      <div class="row" ng-hide="chances > 2 || playerWin">
+        <div class="col-xs-12" ng-class="{'red-color':chances < 2}">
+          <h3>You have {{chances}} Chance remaining</h3>
+        </div>
+      </div>
+
+      <div class="row" ng-show="playerWin || playerLoose">
+        <div class="col-xs-12 text-center" ng-class="{'red-color': playerLoose,'green-color': playerWin}">
+          <h3>You {{ playerWin ? 'Won' : 'loose'}}</h3>
+        </div>
+      </div>
+
       <div class="row">
         <div class="col-xs-12">
           <div class="grids-ct row">
             <div class="tile" ng-style="tileStyle" ng-repeat="tile in tiles">
               <div
                 class="tile-data"
+                ng-class="{'colored':tile.colored}"
                 ng-style="{backgroundColor: tile.color}"
                 data-tile-id="{{tile.tileNumber}}"
-                ng-click="tileClick(tile.tileNumber)" >
-                <!--{{$index + 1}}-->
+                ng-click="tileClick(tile)" >
+                {{$index + 1}}
               </div>
             </div>
           </div>
