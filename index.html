@@ -19,14 +19,15 @@
       </div>
       <div class="row">
         <div class="col-xs-3">
-          <button ng-class="{'disabled':playing}" class="btn btn-success" ng-click="startGame()">PLAY</button>
+          <button ng-class="{'disabled btn-default':playing, 'btn-success':!playing}" class="btn start-game" ng-click="startGame()"> {{chances == 3 ? 'START' : 'PLAY'}}</button>
         </div>
-        <div class="col-xs-4">
+        <div class="col-xs-3">
           <div class="row">
             <label for="changeLevel" class="col-xs-4 text-right level-lbl">Level</label>
             <div class="col-xs-8">
               <select class="form-control" ng-class="{'disabled':playing}" id="changeLevel" ng-model="selectedLevel" ng-change="changeLevel(selectedLevel)">
-                <option ng-repeat="lvl in levels" ng-value="lvl.level">Level {{lvl.level + 1 + ' (' + lvl.levelDisplay + ')'}}</option>
+                <option value="0" selected>Select</option>
+                <option ng-repeat="lvl in levels" data-ng-value="lvl.level">{{lvl.level + 1 + ' (' + lvl.levelDisplay + ')'}}</option>
               </select>
             </div>
           </div>
@@ -35,19 +36,19 @@
           <!--Timer-->
           <div class="row">
             <label class="col-xs-6 text-right level-lbl">Time Left:</label>
-            <label class="col-xs-6 text-left time-remaining">{{(timeRemaining)/1000}} <span class="second">s</span></label>
+            <label class="col-xs-6 text-left time-remaining" ng-class="{'red-color': (timeRemaining <= 3000 && playing)}">{{(timeRemaining)/1000}} <span class="second">s</span></label>
           </div>
         </div>
       </div>
-      <div class="row" ng-hide="chances > 2 || playerWin">
-        <div class="col-xs-12" ng-class="{'red-color':chances < 2}">
-          <h3>You have {{chances}} Chance remaining</h3>
+      <div class="row" ng-hide="chances > 2 || chances == 0 || playerWin">
+        <div class="col-xs-12 text-center" ng-class="{'red-color':chances < 2}">
+          <h3>Time's UP. You have {{chances}} more Chance</h3>
         </div>
       </div>
 
       <div class="row" ng-show="playerWin || playerLoose">
         <div class="col-xs-12 text-center" ng-class="{'red-color': playerLoose,'green-color': playerWin}">
-          <h3>You {{ playerWin ? 'Won' : 'loose'}}</h3>
+          <h3>{{ playerWin ? 'Congratulations. You Won !' : 'Sorry You loose, Try Again'}}</h3>
         </div>
       </div>
 
@@ -61,7 +62,6 @@
                 ng-style="{backgroundColor: tile.color}"
                 data-tile-id="{{tile.tileNumber}}"
                 ng-click="tileClick(tile)" >
-                {{$index + 1}}
               </div>
             </div>
           </div>

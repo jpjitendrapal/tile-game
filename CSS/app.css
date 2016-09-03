@@ -5,6 +5,7 @@ body{
 
 .disabled{
   pointer-events: none;
+  background-color: #A9A9A9;
 }
 .red-color{
   color: red;
@@ -42,7 +43,7 @@ body{
   display: inline-block;
   box-sizing: border-box;
 }
-.btn-success{
+.start-game{
   width: 100%;
 }
 .level-lbl{

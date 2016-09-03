@@ -4,69 +4,21 @@
 
 var App = angular.module("App",[]);
 
-App.controller("TileGameCtrl",["$scope","$interval", function($scope,$interval){
-  $scope.changeLevel = function(newLevel){
-    $scope.level = newLevel;
-    $scope.chances = 3;
-    createTiles();
-    setWidth(newLevel);
-  };
+// tile game controller
+App.controller("TileGameCtrl",["$scope","$interval","$timeout", function($scope,$interval,$timeout){
 
-  $scope.resetGame = function(){
-    $scope.changeLevel($scope.level);
-  };
-  $scope.startGame = function(){
-    if($scope.chances == 3){
-      createTiles();
-    } else {
-      updateTilesRemaining();
-    }
-    var howManyTilesToColor = $scope.levels[$scope.level].tilesToColor - $scope.tilesRemainig.length
-      ,totalTiles = $scope.levels[$scope.level].numberOfTiles;
+  // ******* private functions *********
 
-    $scope.tilesSelected = generateUniqueRands(howManyTilesToColor, totalTiles, $scope.tilesRemainig);
-    $scope.tilesSelected.forEach(function(item){
-      $scope.tiles[item-1].color = getRandomColor();
-      $scope.tiles[item-1].colored = true;
-      $scope.tiles[item-1].clicked = false;
-    });
-    $scope.tilesSelected = $scope.tilesSelected.concat($scope.tilesRemainig);
-    $scope.playing = true;
-    $scope.playerWin = undefined;
-    $scope.playerLoose = undefined;
-    startTimer();
-  };
-  $scope.stopGame = function (how) {
-    stopTimer();
-    $scope.playing = false;
-    if(how == "loose"){
-      $scope.chances = $scope.chances - 1;
-      if($scope.chances == 0){
-        //alert("Sorry you loose");
-        $scope.playerLoose = true;
-        $scope.resetGame();
-      }
-    } else if(how == "win"){
-      $scope.playerWin = true;
-      //alert("You win");
-    }
-
-  };
-
-  $scope.tileClick = function(tile){
-    if($scope.playing){
-      tile.color = "#FFFFFF";
-      tile.colored = false;
-      tile.clicked = true;
-    }
-  };
+  /**
+   * Start the timer (it update time in every second)
+   */
   function startTimer(){
     $scope.timeRemaining = $scope.levels[$scope.level].timeDuration;
     $scope.timerId = $interval(function() {
       if ($scope.timeRemaining > 0) {
-        updateTilesRemaining(); // updated remaining tiles
+        updateTilesRemaining(); // update remaining tiles
         $scope.timeRemaining = $scope.timeRemaining - 1000;
-        if($scope.tilesRemainig.length == 0){
+        if($scope.tilesRemaining.length == 0){
           $scope.stopGame("win");
         }
       } else {
@@ -74,17 +26,25 @@ App.controller("TileGameCtrl",["$scope","$interval", function($scope,$interval){
       }
     }, 1000);
   }
+
+  /**
+   * Stop the timer (it stop the timer and clear interval which is called in startTimer function)
+   */
   function stopTimer(){
     if (angular.isDefined($scope.timerId)) {
       $interval.cancel($scope.timerId);
       $scope.timerId = undefined;
     }
   }
+
+  /**
+   * Update scope variable tilesRemaining
+   */
   function updateTilesRemaining(){
-    $scope.tilesRemainig = [];
+    $scope.tilesRemaining = [];
     $scope.tilesSelected.forEach(function(tileNumber){
       if(!$scope.tiles[tileNumber-1].clicked && $scope.tiles[tileNumber-1].colored){
-        $scope.tilesRemainig.push(tileNumber);
+        $scope.tilesRemaining.push(tileNumber);
       }
     });
   }
@@ -124,6 +84,75 @@ App.controller("TileGameCtrl",["$scope","$interval", function($scope,$interval){
       );
     }
   }
+  // **** private functions END ********
+
+  $scope.changeLevel = function(newLevel){
+    $scope.level = newLevel;
+    $scope.chances = 3;
+    createTiles();
+    setWidth(newLevel);
+  };
+
+  $scope.resetGame = function(){
+    $scope.playing = false;
+    $scope.playerWin = undefined;
+    $scope.playerLoose = undefined;
+    $scope.timerId = 0;
+    $scope.timeRemaining = 0;
+    $scope.tilesRemaining = [];
+    $scope.tilesSelected = [];
+    $scope.changeLevel($scope.level);
+  };
+  $scope.startGame = function(){
+    if($scope.chances == 3){
+      createTiles();
+    } else {
+      updateTilesRemaining();
+    }
+    var howManyTilesToColor = $scope.levels[$scope.level].tilesToColor - $scope.tilesRemaining.length
+      ,totalTiles = $scope.levels[$scope.level].numberOfTiles;
+
+    $scope.tilesSelected = generateUniqueRands(howManyTilesToColor, totalTiles, $scope.tilesRemaining);
+    $scope.tilesSelected.forEach(function(item){
+      $scope.tiles[item-1].color = getRandomColor();
+      $scope.tiles[item-1].colored = true;
+      $scope.tiles[item-1].clicked = false;
+    });
+    $scope.tilesSelected = $scope.tilesSelected.concat($scope.tilesRemaining);
+    $scope.playing = true;
+    $scope.playerWin = undefined;
+    $scope.playerLoose = undefined;
+    startTimer();
+  };
+
+  $scope.stopGame = function (how) {
+    stopTimer();
+    $scope.playing = false;
+    if(how == "loose"){
+      $scope.chances = $scope.chances - 1;
+      if($scope.chances == 0){
+        $scope.playerLoose = true;
+        $timeout(function(){
+          $scope.resetGame();
+        }, 2000);
+      }
+    } else if(how == "win"){
+      $scope.playerWin = true;
+      $timeout(function(){
+        $scope.resetGame();
+      }, 2000);
+    }
+
+  };
+
+  $scope.tileClick = function(tile){
+    if($scope.playing){
+      tile.color = "#FFFFFF";
+      tile.colored = false;
+      tile.clicked = true;
+    }
+  };
+
   // generate random numbers
   // param:n => how many numbers
   // param:r => within 1 to r range
@@ -160,12 +189,13 @@ App.controller("TileGameCtrl",["$scope","$interval", function($scope,$interval){
     $scope.levels = [];
     $scope.timerId = 0;
     $scope.timeRemaining = 0;
-    $scope.tilesRemainig = [];
+    $scope.tilesRemaining = [];
     $scope.tilesSelected = [];
     // create all the levels
     createLevels(LEVELS);
+    // create required tiles
     createTiles();
-    // set initial width of tiles for level 0
+    // set initial width of tiles for corresponding level
     setWidth($scope.level);
     $scope.selectedLevel = "0";
   }
