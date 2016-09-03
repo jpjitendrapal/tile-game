@@ -33,6 +33,10 @@ body{
   margin-top:10px;
   margin-bottom: 20px;
 }
+.grid-size-input{
+  height: 32px;
+  max-width: 100px;
+}
 .tile-data{
   height: 100px;
   width: 95%;

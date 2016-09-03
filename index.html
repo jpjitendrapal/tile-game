@@ -19,28 +19,38 @@
       </div>
       <div class="row">
         <div class="col-xs-12 col-sm-3 margin-bottom">
-          <button ng-class="{'disabled btn-default':playing, 'btn-success':!playing}" class="btn start-game" ng-click="startGame()"><span ng-bind="playing ? 'Playing' : (chances == TOTALCHANCES ? 'START' : 'PLAY')"></span></button>
+          <button ng-class="{'disabled btn-default':playing, 'btn-success':!playing}" class="btn start-game" ng-click="GRIDSIZE > 0 && TOTALCHANCES > 0 ? startGame() : ''"><span ng-bind="playing ? 'Playing' : (chances == TOTALCHANCES ? 'START' : 'PLAY')"></span></button>
         </div>
         <div class="col-xs-12 col-sm-3 margin-bottom">
           <div class="row">
-            <label for="changeLevel" class="col-xs-4 level-lbl">Level</label>
-            <div class="col-xs-8">
-              <select class="form-control" ng-class="{'disabled':playing}" id="changeLevel" ng-model="selectedLevel" ng-change="changeLevel(selectedLevel)">
-                <option value="0">Select</option>
-                <option ng-repeat="lvl in levels" data-ng-value="lvl.level">{{lvl.level + 1 + ' (' + lvl.levelDisplay + ')'}}</option>
-              </select>
-            </div>
+            <label class="col-xs-6 level-lbl">Grid Size</label>
+            <input class="col-xs-6 grid-size-input" list="gridSize" ng-disabled="playing" name="gridsize" ng-model="GRIDSIZE">
+            <datalist id="gridSize">
+              <option value="1">
+              <option value="2">
+              <option value="3">
+            </datalist>
           </div>
         </div>
-        <div class="col-xs-12 col-sm-5 margin-bottom">
+        <div class="col-xs-12 col-sm-3 margin-bottom">
+          <div class="row">
+            <label class="col-xs-6 level-lbl">Lives</label>
+            <input class="col-xs-6 grid-size-input" ng-change="chances = TOTALCHANCES;" list="lives" ng-disabled="playing" name="lives" ng-model="TOTALCHANCES">
+            <datalist id="lives">
+              <option value="1">
+              <option value="2">
+            </datalist>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-3 margin-bottom">
           <!--Timer-->
           <div class="row">
-            <label class="col-xs-6 col-sm-6 col-lg-offset-1 col-lg-4 level-lbl">Time Left:</label>
+            <label class="col-xs-6 col-sm-6 level-lbl">Time Left:</label>
             <label class="col-xs-6 time-remaining" ng-class="{'red-color': (timeRemaining <= 3000 && playing)}"><span ng-bind="(timeRemaining)/1000"></span> <span class="second">s</span></label>
           </div>
         </div>
       </div>
-      <div class="row" ng-hide="chances == TOTALCHANCES || chances == 0 || playerWin">
+      <div class="row" ng-hide="chances == TOTALCHANCES || chances == 0 || playerWin || !playing">
         <div class="col-xs-12 text-center" ng-class="{'warn-color':chances < 2}">
           <h3>Time's UP. You have {{chances}} more Chance</h3>
         </div>
@@ -68,6 +78,7 @@
                 ng-style="{backgroundColor: tile.color}"
                 data-tile-id="{{tile.tileNumber}}"
                 ng-click="tileClick(tile)" >
+                {{tile.tileData}}
               </div>
             </div>
           </div>

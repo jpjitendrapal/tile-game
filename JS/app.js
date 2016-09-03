@@ -11,7 +11,7 @@ App.controller("TileGameCtrl",["$scope","$interval","$timeout", function($scope,
    * Start the timer (it update time in every second)
    */
   function startTimer(){
-    $scope.timeRemaining = $scope.levels[$scope.level].timeDuration;
+    $scope.timeRemaining = $scope.levels.timeDuration;
     $scope.timerId = $interval(function() {
       if ($scope.timeRemaining > 0) {
         updateTilesRemaining(); // update remaining tiles
@@ -54,8 +54,8 @@ App.controller("TileGameCtrl",["$scope","$interval","$timeout", function($scope,
    * Set width of all the tiles
    * @param {number} current level
    */
-  function setWidth(level){
-    var gridSize = parseInt(level) + 3,
+  function setWidth(size){
+    var gridSize = parseInt(size),
       widthPercent = 100/gridSize;
     $scope.tileStyle = {
       "width": widthPercent + "%"
@@ -65,24 +65,23 @@ App.controller("TileGameCtrl",["$scope","$interval","$timeout", function($scope,
    * Create all the levels with its configuration
    * @param {number} total number of level to add in the game
    */
-  function createLevels(numberOfLevels){
-    for(var i= 0; i < numberOfLevels; i++){
-      $scope.levels.push(
-        {
-          level: i
-          ,numberOfTiles: (i + 3)*(i + 3)
-          ,levelDisplay: (i+3) +"X" + (i+3)
-          ,tilesToColor : (i+2)*(i+2) // how many tile we need for coloring
-          ,timeDuration: (i+ Math.ceil(i/2) + 6)*1000
-        }
-      );
-    }
+  function createLevels(gridSize){
+    $scope.levels = {};
+    var i = parseInt(gridSize);
+    $scope.levels =
+      {
+        level: i
+        ,numberOfTiles: (i)*(i)
+        ,levelDisplay: (i) +"X" + (i)
+        ,tilesToColor : (i-1)*(i-1) // how many tile we need for coloring
+        ,timeDuration: (i+ Math.ceil(i/2))*1000
+      };
   }
   /**
    * Create all the tiles with its initial configuration
    */
   function createTiles(){
-    var numberOfTiles = $scope.levels[$scope.level].numberOfTiles;
+    var numberOfTiles = $scope.levels.numberOfTiles;
     $scope.tiles = [];
     for(var i = 0; i < numberOfTiles; i++){
       $scope.tiles.push(
@@ -136,8 +135,9 @@ App.controller("TileGameCtrl",["$scope","$interval","$timeout", function($scope,
    * @param {number} new level to be select
    */
   $scope.changeLevel = function(newLevel){
-    $scope.level = newLevel;
+    $scope.level = newLevel - 1;
     $scope.chances = $scope.TOTALCHANCES;
+    createLevels(newLevel);
     createTiles();
     setWidth(newLevel);
   };
@@ -154,7 +154,7 @@ App.controller("TileGameCtrl",["$scope","$interval","$timeout", function($scope,
     $scope.tilesRemaining = [];
     $scope.tilesSelected = [];
     $scope.playAgain = false;
-    $scope.changeLevel($scope.level);
+    $scope.changeLevel($scope.GRIDSIZE);
   };
 
   /**
@@ -162,13 +162,13 @@ App.controller("TileGameCtrl",["$scope","$interval","$timeout", function($scope,
    */
   $scope.startGame = function(){
     stopTimer();
-    if($scope.chances == $scope.TOTALCHANCES){
+    if($scope.chances == $scope.TOTALCHANCES || $scope.chances == 0){
       $scope.resetGame();
     } else {
       updateTilesRemaining();
     }
-    var howManyTilesToColor = $scope.levels[$scope.level].tilesToColor - $scope.tilesRemaining.length
-      ,totalTiles = $scope.levels[$scope.level].numberOfTiles;
+    var howManyTilesToColor = $scope.levels.tilesToColor - $scope.tilesRemaining.length
+      ,totalTiles = $scope.levels.numberOfTiles;
 
     $scope.tilesSelected = generateUniqueRands(howManyTilesToColor, totalTiles, $scope.tilesRemaining);
     $scope.tilesSelected.forEach(function(item){
@@ -198,6 +198,8 @@ App.controller("TileGameCtrl",["$scope","$interval","$timeout", function($scope,
         $scope.timerIdGameStop = $timeout(function(){
           $scope.resetGame();
         }, 2000);
+      } else if($scope.chances > 0) {
+        $scope.startGame();
       }
     } else if(how == "win"){
       $scope.playerWin = true;
@@ -225,14 +227,14 @@ App.controller("TileGameCtrl",["$scope","$interval","$timeout", function($scope,
    * Initializer method
    */
   function inIt() {
-    $scope.TOTALLEVELS = 10; // total number of levels to be add in the game
+    $scope.GRIDSIZE = 4; // total number of levels to be add in the game
     $scope.TOTALCHANCES = 3; // total number of chances to give to users
     $scope.chances = $scope.TOTALCHANCES; // total chances remaining
     $scope.playing = false;
     $scope.playerWin = undefined;
     $scope.playerLoose = undefined;
     $scope.level = 0;
-    $scope.levels = [];
+    $scope.levels = {};
     $scope.timerId = undefined;
     $scope.timerIdGameStop = undefined;
     $scope.timeRemaining = 0;
@@ -240,11 +242,11 @@ App.controller("TileGameCtrl",["$scope","$interval","$timeout", function($scope,
     $scope.tilesSelected = [];
     $scope.playAgain = false;
     // create all the levels
-    createLevels($scope.TOTALLEVELS);
+    createLevels($scope.GRIDSIZE);
     // create required tiles
     createTiles();
     // set initial width of tiles for corresponding level
-    setWidth($scope.level);
+    setWidth($scope.GRIDSIZE);
     $scope.selectedLevel = "0";
   }
 
