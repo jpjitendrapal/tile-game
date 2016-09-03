@@ -19,7 +19,7 @@
       </div>
       <div class="row">
         <div class="col-xs-12 col-sm-3 margin-bottom">
-          <button ng-class="{'disabled btn-default':playing, 'btn-success':!playing}" class="btn start-game" ng-click="GRIDSIZE > 0 && TOTALCHANCES > 0 ? startGame() : ''"><span ng-bind="playing ? 'Playing' : (chances == TOTALCHANCES ? 'START' : 'PLAY')"></span></button>
+          <button ng-class="{'disabled btn-default':playing, 'btn-success':!playing}" class="btn start-game" ng-click="GRIDSIZE > 1 && TOTALCHANCES > 0 ? startGame() : ''"><span ng-bind="playing ? 'Playing' : (chances == TOTALCHANCES ? 'START' : 'PLAY')"></span></button>
         </div>
         <div class="col-xs-12 col-sm-3 margin-bottom">
           <div class="row">
@@ -52,16 +52,14 @@
       </div>
       <div class="row" ng-hide="chances == TOTALCHANCES || chances == 0 || playerWin || !playing">
         <div class="col-xs-12 text-center" ng-class="{'warn-color':chances < 2}">
-          <h3>Time's UP. You have {{chances}} more Chance</h3>
+          <h3>Time's UP. You have {{chances}} more chance</h3>
         </div>
       </div>
-
       <div class="row" ng-show="playAgain">
         <div class="col-xs-12 text-center">
           <h5>Click on Play button to start the game again</h5>
         </div>
       </div>
-
       <div class="row" ng-show="playerWin || playerLoose">
         <div class="col-xs-12 text-center" ng-class="{'red-color': playerLoose,'green-color': playerWin}">
           <h3>{{ playerWin ? 'Congratulations. You Won !' : 'Sorry You loose, Try Again'}}</h3>
