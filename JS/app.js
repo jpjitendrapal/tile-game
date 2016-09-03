@@ -73,7 +73,7 @@ App.controller("TileGameCtrl",["$scope","$interval","$timeout", function($scope,
         level: i
         ,numberOfTiles: (i)*(i)
         ,levelDisplay: (i) +"X" + (i)
-        ,tilesToColor : (i-1)*(i-1) // how many tile we need for coloring
+        ,tilesToColor : $scope.TILESTOCOLORED || (i-1)*(i-1) // how many tile we need for coloring
         ,timeDuration: (i+ Math.ceil(i/2))*1000
       };
   }
@@ -153,7 +153,6 @@ App.controller("TileGameCtrl",["$scope","$interval","$timeout", function($scope,
     $scope.timeRemaining = 0;
     $scope.tilesRemaining = [];
     $scope.tilesSelected = [];
-    $scope.playAgain = false;
     $scope.changeLevel($scope.GRIDSIZE);
   };
 
@@ -161,27 +160,28 @@ App.controller("TileGameCtrl",["$scope","$interval","$timeout", function($scope,
    * Start the Game
    */
   $scope.startGame = function(){
-    stopTimer();
-    if($scope.chances == $scope.TOTALCHANCES || $scope.chances == 0){
-      $scope.resetGame();
-    } else {
-      updateTilesRemaining();
-    }
-    var howManyTilesToColor = $scope.levels.tilesToColor - $scope.tilesRemaining.length
-      ,totalTiles = $scope.levels.numberOfTiles;
+    if($scope.GRIDSIZE > 1 && $scope.TOTALCHANCES > 0 && parseInt($scope.GRIDSIZE)*parseInt($scope.GRIDSIZE) > $scope.TILESTOCOLORED){
+      stopTimer();
+      if($scope.chances == $scope.TOTALCHANCES || $scope.chances == 0){
+        $scope.resetGame();
+      } else {
+        updateTilesRemaining();
+      }
+      var howManyTilesToColor = $scope.levels.tilesToColor - $scope.tilesRemaining.length
+        ,totalTiles = $scope.levels.numberOfTiles;
 
-    $scope.tilesSelected = generateUniqueRands(howManyTilesToColor, totalTiles, $scope.tilesRemaining);
-    $scope.tilesSelected.forEach(function(item){
-      $scope.tiles[item-1].color = getRandomColor();
-      $scope.tiles[item-1].colored = true;
-      $scope.tiles[item-1].clicked = false;
-    });
-    $scope.tilesSelected = $scope.tilesSelected.concat($scope.tilesRemaining);
-    $scope.playing = true;
-    $scope.playerWin = undefined;
-    $scope.playerLoose = undefined;
-    $scope.playAgain = false;
-    startTimer();
+      $scope.tilesSelected = generateUniqueRands(howManyTilesToColor, totalTiles, $scope.tilesRemaining);
+      $scope.tilesSelected.forEach(function(item){
+        $scope.tiles[item-1].color = getRandomColor();
+        $scope.tiles[item-1].colored = true;
+        $scope.tiles[item-1].clicked = false;
+      });
+      $scope.tilesSelected = $scope.tilesSelected.concat($scope.tilesRemaining);
+      $scope.playing = true;
+      $scope.playerWin = undefined;
+      $scope.playerLoose = undefined;
+      startTimer();
+    }
   };
 
   /**
@@ -218,8 +218,6 @@ App.controller("TileGameCtrl",["$scope","$interval","$timeout", function($scope,
       tile.color = "#FFFFFF";
       tile.colored = false;
       tile.clicked = true;
-    } else {
-      $scope.playAgain = true;
     }
   };
 
@@ -230,6 +228,7 @@ App.controller("TileGameCtrl",["$scope","$interval","$timeout", function($scope,
     $scope.GRIDSIZE = 4; // total number of levels to be add in the game
     $scope.TOTALCHANCES = 3; // total number of chances to give to users
     $scope.chances = $scope.TOTALCHANCES; // total chances remaining
+    $scope.TILESTOCOLORED = 3;
     $scope.playing = false;
     $scope.playerWin = undefined;
     $scope.playerLoose = undefined;
@@ -240,7 +239,6 @@ App.controller("TileGameCtrl",["$scope","$interval","$timeout", function($scope,
     $scope.timeRemaining = 0;
     $scope.tilesRemaining = [];
     $scope.tilesSelected = [];
-    $scope.playAgain = false;
     // create all the levels
     createLevels($scope.GRIDSIZE);
     // create required tiles
