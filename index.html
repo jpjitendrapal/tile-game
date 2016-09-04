@@ -38,17 +38,17 @@
             <input class="col-xs-6 grid-size-input" ng-change="chances = TOTALCHANCES;" ng-disabled="playing" name="lives" ng-model="TOTALCHANCES">
           </div>
         </div>
-        <div class="col-xs-12 col-sm-3 col-lg-2 margin-bottom">
+        <div class="col-xs-12 col-sm-3 col-lg-3 margin-bottom">
           <div class="row">
-            <label class="col-xs-6 col-sm-8 level-lbl">Colors Tiles</label>
-            <input class="col-xs-6 col-sm-4 grid-size-input" ng-disabled="playing" name="numberofcolortiles" ng-model="TILESTOCOLORED">
+            <label class="col-xs-6 col-sm-8 col-lg-7 level-lbl">Colors Tiles</label>
+            <input class="col-xs-6 col-sm-4 col-lg-5 grid-size-input" ng-disabled="playing" name="numberofcolortiles" ng-model="TILESTOCOLORED">
           </div>
         </div>
-        <div class="col-xs-12 col-sm-6 col-lg-3 margin-bottom">
+        <div class="col-xs-12 col-sm-6 col-lg-2 margin-bottom">
           <!--Timer-->
           <div class="row">
-            <label class="col-xs-6 col-sm-6 level-lbl">Time Left:</label>
-            <label class="col-xs-6 col-sm-6 time-remaining" ng-class="{'red-color': (timeRemaining <= 3000 && playing)}"><span ng-bind="(timeRemaining)/1000"></span> <span class="second">s</span></label>
+            <label class="col-xs-6 col-sm-6 col-lg-8 level-lbl">Time Left:</label>
+            <label class="col-xs-6 col-sm-6 col-lg-4 time-remaining" ng-class="{'red-color': (timeRemaining <= 3000 && playing)}"><span ng-bind="(timeRemaining)/1000"></span> <span class="second">s</span></label>
           </div>
         </div>
       </div>
