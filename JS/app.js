@@ -225,10 +225,10 @@ App.controller("TileGameCtrl",["$scope","$interval","$timeout", function($scope,
    * Initializer method
    */
   function inIt() {
-    $scope.GRIDSIZE = 4; // total number of levels to be add in the game
+    $scope.GRIDSIZE = 6; // total number of levels to be add in the game
     $scope.TOTALCHANCES = 3; // total number of chances to give to users
     $scope.chances = $scope.TOTALCHANCES; // total chances remaining
-    $scope.TILESTOCOLORED = 3;
+    $scope.TILESTOCOLORED = 12;
     $scope.playing = false;
     $scope.playerWin = undefined;
     $scope.playerLoose = undefined;
